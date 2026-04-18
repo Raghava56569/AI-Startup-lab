@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AI Startup Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orb orb1"></div>
+<div class="bg-orb orb2"></div>
+<div class="bg-orb orb3"></div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+  <div class="loading-steps">
+    <div class="loading-step" id="ls1"><i class="fa fa-brain"></i> &nbsp;Parsing your startup idea...</div>
+    <div class="loading-step" id="ls2"><i class="fa fa-chart-bar"></i> &nbsp;Running market analysis...</div>
+    <div class="loading-step" id="ls3"><i class="fa fa-lightbulb"></i> &nbsp;Generating strategic insights...</div>
+    <div class="loading-step" id="ls4"><i class="fa fa-rocket"></i> &nbsp;Crafting your pitch deck...</div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><i class="fa fa-check-circle"></i> <span id="toastMsg"></span></div>
+
+<nav class="navbar" id="navbar">
+  <div class="nav-logo" onclick="showPage('home')">
+    <i class="fa fa-atom"></i> AI Startup Lab
+  </div>
+  <div class="nav-links" id="navLinks">
+    <button class="nav-btn active" id="navHome" onclick="showPage('home')"><i class="fa fa-home"></i> Home</button>
+    <button class="nav-btn" id="navChat" onclick="showPage('chat')"><i class="fa fa-comments"></i> Chat</button>
+    <button class="nav-btn" id="navHistory" onclick="showPage('history')"><i class="fa fa-history"></i> History</button>
+    <div class="nav-user" id="navUser" style="display:none">
+      <div class="avatar" id="navAvatar">U</div>
+      <button class="nav-btn" onclick="logout()"><i class="fa fa-sign-out-alt"></i></button>
+    </div>
+    <button class="nav-btn primary" id="navLogin" onclick="showPage('login')"><i class="fa fa-sign-in-alt"></i> Login</button>
+  </div>
+</nav>
+
+<div class="page active" id="loginPage">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="logo-icon"><i class="fa fa-atom" style="color:#fff"></i></div>
+      <h1>AI Startup Lab</h1>
+      <p>Your AI-powered idea validator</p>
+    </div>
+    <div class="tab-switcher">
+      <button class="tab-btn active" id="tabLogin" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-icon-wrap">
+          <i class="fa fa-envelope"></i>
+          <input class="form-input" type="email" id="loginEmail" placeholder="you@example.com"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-icon-wrap">
+          <i class="fa fa-lock"></i>
+          <input class="form-input" type="password" id="loginPwd" placeholder="••••••••"/>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="doLogin()">Sign In <i class="fa fa-arrow-right"></i></button>
+      <div class="divider">or continue with</div>
+      <button class="social-btn" onclick="doDemo()"><i class="fa fa-play-circle" style="color:var(--neon)"></i> Try Demo (No Login)</button>
+      <div class="login-footer">Don't have an account? <a onclick="switchTab('signup')">Sign Up</a></div>
+    </div>
+    <div id="signupForm" style="display:none">
+      <div class="form-group">
+        <label>Full Name</label>
+        <div class="input-icon-wrap">
+          <i class="fa fa-user"></i>
+          <input class="form-input" type="text" id="signupName" placeholder="John Doe"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <div class="input-icon-wrap">
+          <i class="fa fa-envelope"></i>
+          <input class="form-input" type="email" id="signupEmail" placeholder="you@example.com"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-icon-wrap">
+          <i class="fa fa-lock"></i>
+          <input class="form-input" type="password" id="signupPwd" placeholder="Create password"/>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="doSignup()">Create Account <i class="fa fa-arrow-right"></i></button>
+      <div class="login-footer">Already have an account? <a onclick="switchTab('login')">Sign In</a></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="homePage">
+  <section class="hero">
+    <div class="hero-badge"><span class="dot"></span> Powered by Gemini API</div>
+    <h1>AI <span class="grad">Startup Lab</span></h1>
+    <p>Generate, evaluate, and improve your startup ideas using advanced AI. Get scores, pros/cons, and a full pitch in seconds.</p>
+    <div class="idea-box" id="ideaBox">
+      <textarea class="idea-input" id="ideaInput" placeholder="Describe your startup idea... e.g. 'An AI tutor app that adapts to each student's learning speed'" rows="1"></textarea>
+      <button class="analyze-btn" id="analyzeBtn" onclick="analyzeIdea()">
+        <i class="fa fa-bolt"></i> Analyze Idea
+      </button>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">10K+</div><div class="stat-label">Ideas Analyzed</div></div>
+      <div class="stat"><div class="stat-num">98%</div><div class="stat-label">Accuracy Rate</div></div>
+      <div class="stat"><div class="stat-num">4.9★</div><div class="stat-label">User Rating</div></div>
+    </div>
+  </section>
+
+  <section id="resultsSection">
+    <div class="results-header">
+      <h2>Analysis Results</h2>
+      <div class="idea-tag" id="ideaTag"></div>
+    </div>
+    <div class="results-grid" id="resultsGrid"></div>
+  </section>
+</div>
+
+<div class="page" id="chatPage">
+  <div class="chat-layout">
+    <aside class="chat-sidebar" id="chatSidebar">
+      <div class="sidebar-header">
+        <button class="new-chat-btn" onclick="newChat()"><i class="fa fa-plus"></i> New Chat</button>
+      </div>
+      <div class="sidebar-section">Recent</div>
+      <div class="chat-history" id="chatHistoryList"></div>
+    </aside>
+    <div class="chat-main">
+      <div class="chat-messages" id="chatMessages">
+        <div class="chat-empty" id="chatEmpty">
+          <i class="fa fa-robot"></i>
+          <h3>AI Startup Advisor</h3>
+          <p>Ask me anything about startup strategy, markets, funding, or have me evaluate your idea.</p>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-box">
+          <button class="sidebar-toggle" onclick="toggleSidebar()"><i class="fa fa-bars"></i></button>
+          <textarea class="chat-textarea" id="chatInput" placeholder="Ask about startups, markets, or pitch ideas..." rows="1"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMessage()"><i class="fa fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="historyPage">
+  <h1 class="page-title">Analysis History</h1>
+  <p class="page-subtitle">All your previously analyzed startup ideas</p>
+  <div class="history-grid" id="historyGrid"></div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
